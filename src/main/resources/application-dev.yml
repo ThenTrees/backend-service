@@ -1,0 +1,40 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  devtools:
+    add-properties: true
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/postgres
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+#  sql:
+#    init:
+#      mode: always
+# application-dev.yml
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+openapi:
+  service:
+    api-docs: backend-service
+    server: ${BACKEND_HOST:http://localhost:${server.port}}
+    title: Backend service
+    version: 1.0.0
+
+# Generate HMAC Authentication Code: https://www.devglan.com/online-tools/hmac-sha256-online
+jwt:
+  expiryMinutes: 60
+  expiryDay: 14
+  accessKey: IIwLeRIVsznVTPFEYmA6HiVVBrlKkKqC36OpWzqw8mk=
+  refreshKey: tvszknimPZQEdy3c9TCERBLAkOyoCc2ZvOmGcHsRJgg=
