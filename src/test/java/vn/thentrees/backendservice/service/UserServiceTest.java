@@ -52,7 +52,7 @@ class UserServiceTest {
     static void beforeAll() {
         // This method can be used to set up any static resources needed for the tests
         userSample1 = new UserEntity();
-        userSample1.setId(1L);
+        userSample1.setId(Long.valueOf(1L));
         userSample1.setUsername("testuser1");
         userSample1.setFirstName("test");
         userSample1.setLastName("user1");
@@ -64,7 +64,7 @@ class UserServiceTest {
         userSample1.setPhone("0938749250");
 
         userSample2 = new UserEntity();
-        userSample2.setId(2L);
+        userSample2.setId(Long.valueOf(2L));
         userSample2.setUsername("testuser2");
         userSample2.setFirstName("test");
         userSample2.setLastName("user2");
@@ -76,7 +76,7 @@ class UserServiceTest {
         userSample1.setPhone("0385788328");
 
         role = new Role();
-        role.setId(4);
+        role.setId(Integer.valueOf(4));
         role.setName("user");
         role.setDescription("User role");
     }
@@ -129,10 +129,10 @@ class UserServiceTest {
     @Test
     void testGetUserById_Success() {
         // Gia lap phuong thuc findById cua userRepository
-        when(userRepository.findById(1L)).thenReturn(Optional.of(userSample1));
+        when(userRepository.findById(Long.valueOf(1L))).thenReturn(Optional.of(userSample1));
 
         // Gọi phương thức cần kiểm tra
-        UserResponse result = userService.findById(1L);
+        UserResponse result = userService.findById(Long.valueOf(1L));
 
         Assertions.assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -147,7 +147,7 @@ class UserServiceTest {
     void testGetUserById_Failed() {
         // Gia lap phuong thuc findById cua userRepository
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            userService.findById(999L);
+            userService.findById(Long.valueOf(999L));
         });
         Assertions.assertEquals("User not found", exception.getMessage());
     }
@@ -182,9 +182,9 @@ class UserServiceTest {
     @Test
     void testSaveUser_Success() {
         when(userRepository.save(any(UserEntity.class))).thenReturn(userSample1);
-        when(roleRepository.findById(4)).thenReturn(Optional.of(role));
+        when(roleRepository.findById(Integer.valueOf(4))).thenReturn(Optional.of(role));
         AddressRequest addressRequest = AddressRequest.builder()
-                .addressType(1)
+                .addressType(Integer.valueOf(1))
                 .floor("5")
                 .city("HO CHI MINH")
                 .country("VIET NAM")
@@ -213,7 +213,7 @@ class UserServiceTest {
 
     @Test
     void updateUser_Success() {
-        Long userId = 2L;
+        Long userId = (Long) 2L;
 
         UserEntity updatedUser = new UserEntity();
         updatedUser.setId(userId);
@@ -245,14 +245,14 @@ class UserServiceTest {
         userService.update(updateRequest);
 
         UserResponse result = userService.findById(userId);
-        assertEquals(updatedUser.getUsername(), result.getUsername());
+        assertEquals("affterUpdate", result.getUsername());
     }
 
     @Test
     void testChangePassword_Success() {
 
         // gia lap doi tuong
-        Long userId = 1L;
+        Long userId = (Long) 1L;
         UserPasswordRequest userPasswordRequest = new UserPasswordRequest();
         userPasswordRequest.setId(userId);
         userPasswordRequest.setPassword("password1");
@@ -274,7 +274,7 @@ class UserServiceTest {
     @Test
     void testDeleteUser_Success() {
         // gia lap du lieu
-        Long userId = 1L;
+        Long userId = (Long) 1L;
 
         // gia lap hanh vi
         when(userRepository.findById(userId)).thenReturn(Optional.of(userSample1));
@@ -291,7 +291,7 @@ class UserServiceTest {
     @Test
     void testDeleteUser_ThrowsException() {
 // gia lap du lieu
-        Long userId = 1L;
+        Long userId = (Long) 1L;
 
         // gia lap hanh vi
         when(userRepository.findById(userId)).thenReturn(Optional.empty());

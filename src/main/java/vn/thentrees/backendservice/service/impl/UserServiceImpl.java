@@ -159,11 +159,11 @@ public class UserServiceImpl implements UserService {
         user.setEmail(req.getEmail());
         user.setPhone(req.getPhone());
         user.setUsername(req.getUsername());
-        user.setType(UserType.USER);
+        user.setType(req.getType());
         user.setStatus(UserStatus.NONE);
         user.setPassword(passwordEncoder.encode(req.getPassword()));
 
-        Role role = roleRepository.findById(4).orElseThrow(()-> new ResourceNotFoundException("Role Not Found"));
+        Role role = roleRepository.findById(Integer.valueOf(4)).orElseThrow(()-> new ResourceNotFoundException("Role Not Found"));
 
         UserHasRole userHasRole = UserHasRole.builder()
                 .role(role)
@@ -229,26 +229,28 @@ public class UserServiceImpl implements UserService {
         // save address
         List<AddressEntity> addresses = new ArrayList<>();
 
-        req.getAddresses().forEach(address -> {
-            AddressEntity addressEntity = addressRepository.findByUserIdAndAddressType(user.getId(), address.getAddressType());
-            if (addressEntity == null) {
-                addressEntity = new AddressEntity();
-            }
-            addressEntity.setApartmentNumber(address.getApartmentNumber());
-            addressEntity.setFloor(address.getFloor());
-            addressEntity.setBuilding(address.getBuilding());
-            addressEntity.setStreetNumber(address.getStreetNumber());
-            addressEntity.setStreet(address.getStreet());
-            addressEntity.setCity(address.getCity());
-            addressEntity.setCountry(address.getCountry());
-            addressEntity.setAddressType(address.getAddressType());
-            addressEntity.setUserId(user.getId());
+        if (req.getAddresses() != null) {
+            req.getAddresses().forEach(address -> {
+                AddressEntity addressEntity = addressRepository.findByUserIdAndAddressType(user.getId(), address.getAddressType());
+                if (addressEntity == null) {
+                    addressEntity = new AddressEntity();
+                }
+                addressEntity.setApartmentNumber(address.getApartmentNumber());
+                addressEntity.setFloor(address.getFloor());
+                addressEntity.setBuilding(address.getBuilding());
+                addressEntity.setStreetNumber(address.getStreetNumber());
+                addressEntity.setStreet(address.getStreet());
+                addressEntity.setCity(address.getCity());
+                addressEntity.setCountry(address.getCountry());
+                addressEntity.setAddressType(address.getAddressType());
+                addressEntity.setUserId(user.getId());
 
-            addresses.add(addressEntity);
-        });
+                addresses.add(addressEntity);
+            });
 
-        // save addresses
-        addressRepository.saveAll(addresses);
+            // save addresses
+            addressRepository.saveAll(addresses);
+        }
         log.info("Updated addresses: {}", addresses);
     }
 
